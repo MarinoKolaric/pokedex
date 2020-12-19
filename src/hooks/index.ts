@@ -1,0 +1,1 @@
+export { usePokemonsGet } from "./usePokemonsGet";
