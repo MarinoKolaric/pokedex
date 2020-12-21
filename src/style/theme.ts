@@ -3,16 +3,15 @@ export const color = {
   main: "#fff",
   gray: "#333333",
   grayDarker: "#1A1A1A",
-
 };
 
 export const fontSize = {
-  xxs: '11rem',
-  xs: '14rem',
-  sm: '16rem',
-  md: '18rem',
-  lg: '24rem',
-  xl: '32rem',
+  xxs: "11rem",
+  xs: "14rem",
+  sm: "16rem",
+  md: "18rem",
+  lg: "24rem",
+  xl: "32rem",
 };
 
 export const breakpoints = {
@@ -29,4 +28,4 @@ export const mediaQueries = (key: keyof typeof breakpoints) => {
     `@media (min-width: ${breakpoints[key]}px) { ${style} }`;
 };
 
-export const boxShadow = 'box-shadow: 10px 10px 15px 0 rgba(0, 0, 0, 0.3);';
+export const boxShadow = "box-shadow: 8px 8px 8px 0 rgba(0, 0, 0, 0.4);";
