@@ -1,36 +1,40 @@
-import React, { useContext, useRef, useCallback, useState } from "react";
+import React, {
+  useContext,
+  useRef,
+  useCallback,
+  useEffect,
+} from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { Header } from "@components";
+import { Header, Loading, PokemonCard, SearchDashboard } from "@components";
 import { usePokemonsGet } from "@hooks";
 import { PokemonContext } from "@context";
-import { IPokemon } from "@types";
+import {  IPokemonDetails } from "@types";
 
 const PokemonsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   padding: 24px;
   margin: 8px;
 `;
 
 const PokemonContainer = styled.div`
-  padding: 24px;
-  margin: 8px;
-  background: #333;
-  color: #fff;
   cursor: pointer;
-
   width: 300px;
-  height: 300px;
 `;
 
-export const Homepage = () => {
-  const [offset, setOffset] = useState<number>(0);
-  const { loading, error, hasMore } = usePokemonsGet({
-    offset: offset,
-  });
+export const HomePage = () => {
+  let history = useHistory();
   const {
-    state: { pokemons },
+    state: { limit, offset, searchedPokemon },
+    dispatch,
   } = useContext(PokemonContext);
+
+  const { loading, error, hasMore, pokedex } = usePokemonsGet({
+    offset,
+    limit,
+  });
 
   const observer = useRef() as React.MutableRefObject<any>;
 
@@ -40,31 +44,65 @@ export const Homepage = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setOffset((prevOffset: number) => prevOffset + 20);
+          dispatch({
+            type: "SET_OFFSET",
+            payload: offset + limit,
+          });
         }
       });
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore]
+    [loading, hasMore, limit, dispatch, offset]
   );
+
+  function handleClick({ id }: IPokemonDetails) {
+    history.push(`/pokemon/${id}`);
+  }
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_OFFSET",
+      payload: 0,
+    });
+
+    dispatch({
+      type: "SEARCHED_POKEMON",
+      payload: null,
+    });
+  }, [dispatch]);
 
   return (
     <>
       <Header />
       <PokemonsContainer>
-        {pokemons.map((pokemon: IPokemon, i: number) => {
-          if (pokemons.length === i + 1) {
-            return (
-              <PokemonContainer key={i} ref={lastPokemonRef}>
-                {pokemon.name}
-              </PokemonContainer>
-            );
-          } else {
-            return <PokemonContainer key={i}>{pokemon.name}</PokemonContainer>;
-          }
-        })}
+        <SearchDashboard />
+        {searchedPokemon ? (
+          <PokemonContainer onClick={() => handleClick(searchedPokemon)}>
+            <PokemonCard pokemon={searchedPokemon} />
+          </PokemonContainer>
+        ) : (
+          pokedex.map((pokemon: IPokemonDetails, i: number) => {
+            if (pokedex.length === i + 1) {
+              return (
+                <PokemonContainer
+                  key={i}
+                  ref={lastPokemonRef}
+                  onClick={() => handleClick(pokemon)}
+                >
+                  <PokemonCard pokemon={pokemon} />
+                </PokemonContainer>
+              );
+            } else {
+              return (
+                <PokemonContainer key={i} onClick={() => handleClick(pokemon)}>
+                  <PokemonCard pokemon={pokemon} />
+                </PokemonContainer>
+              );
+            }
+          })
+        )}
 
-        {loading && "Loading..."}
+        {loading && <Loading />}
         {error && "Error"}
       </PokemonsContainer>
     </>
