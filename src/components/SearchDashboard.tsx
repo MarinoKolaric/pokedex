@@ -14,7 +14,8 @@ const Container = styled.div`
   color: #fff;
   width: 100%;
   border-radius: 4px;
-  height: 84px;
+  min-height: 84px;
+  flex-wrap: wrap;
 `;
 
 const ButtonWrapper = styled.div`
@@ -24,12 +25,15 @@ const ButtonWrapper = styled.div`
   background: ${theme.color.background};
   border-radius: 4px;
   margin: 0 8px;
+  order: 2;
 `;
 
 const Form = styled.form`
   position: relative;
   display: flex;
   align-items: center;
+  order: 2;
+  flex-wrap: wrap;
 `;
 
 const Label = styled.label`
@@ -60,7 +64,14 @@ const LoadingMessage = styled.div`
 `;
 
 const NumOfPagesContainer = styled.div`
+  margin-left: 0;
+  order: 1;
+
+  ${theme.mediaQueries("tablet")`
+    order: 3;
   margin-left: auto;
+
+  `}
 `;
 
 export const SearchDashboard = () => {
@@ -160,17 +171,13 @@ export const SearchDashboard = () => {
 
   return (
     <Container>
-      <div>
-        <Form onSubmit={handleSubmit}>
-          <Label>
-            Name:
-            <Input type="text" value={searchValue} onChange={handleChange} />
-          </Label>
-          <Input type="submit" value="Search"></Input>
-          {loading && <LoadingMessage>Searching...</LoadingMessage>}
-          {error && <ErrorMessage>pokemon nije pronađen!</ErrorMessage>}
-        </Form>
-      </div>
+      <Form onSubmit={handleSubmit}>
+        <Label>Name:</Label>
+        <Input type="text" value={searchValue} onChange={handleChange} />
+        <Input type="submit" value="Search"></Input>
+        {loading && <LoadingMessage>Searching...</LoadingMessage>}
+        {error && <ErrorMessage>pokemon nije pronađen!</ErrorMessage>}
+      </Form>
       {searchValue && (
         <ButtonWrapper>
           <CloseButton onClick={() => resetFilteredPokemon()} />
