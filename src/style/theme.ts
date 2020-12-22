@@ -3,6 +3,8 @@ export const color = {
   main: "#fff",
   gray: "#333333",
   grayDarker: "#1A1A1A",
+  loadingColor: "#f2dede",
+  alertColor: "#a94442",
 };
 
 export const fontSize = {
