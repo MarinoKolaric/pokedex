@@ -1,1 +1,2 @@
-export { Homepage } from './Homepage';
+export { HomePage } from './Homepage';
+export { PokemonPage } from './PokemonPage';
