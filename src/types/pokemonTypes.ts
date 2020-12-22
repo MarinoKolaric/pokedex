@@ -3,11 +3,34 @@ export interface IPokemon {
   url: string;
 }
 
+export interface IType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
+
+export interface IPokemonDetails {
+  id: number;
+  name: string;
+  order: number;
+  img: string;
+  weight?: number;
+  types?: Array<IType>;
+  baseExperience?: number;
+  height?: number;
+}
+
 export interface IPokemonState {
-  pokemons: Array<IPokemon>;
-  selectedPokemon: IPokemon | null;
+  typeFilter: string;
+  limit: number;
+  offset: number;
+  searchedPokemon: IPokemonDetails | null;
 }
 
 export type PokemonAction =
-  | { type: "SET_POKEMON"; payload: IPokemon }
-  | { type: "SET_POKEMONS"; payload: IPokemonState["pokemons"] }
+  | { type: "SET_TYPE_FILTER"; payload: IPokemonState["typeFilter"] }
+  | { type: "SEARCHED_POKEMON"; payload: IPokemonState["searchedPokemon"] }
+  | { type: "SET_OFFSET"; payload: IPokemonState["offset"] }
+  | { type: "SET_LIMIT"; payload: IPokemonState["limit"] };

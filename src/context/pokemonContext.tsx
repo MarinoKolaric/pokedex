@@ -10,8 +10,10 @@ interface IContextProps {
 export const PokemonContext = createContext({} as IContextProps);
 
 export const initialPokemonState: IPokemonState = {
-  pokemons: [],
-  selectedPokemon: null
+  typeFilter: '',
+  limit: 10,
+  offset: 0,
+  searchedPokemon: null,
 };
 
 export const PokemonProvider = (props: { children: React.ReactNode }) => {
